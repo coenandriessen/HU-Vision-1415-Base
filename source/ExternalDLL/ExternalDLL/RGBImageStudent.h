@@ -6,6 +6,7 @@
 
 #pragma once
 #include "RGBImage.h"
+#include <vector>
 class RGBImageStudent : public RGBImage {
 public:
 
@@ -13,7 +14,7 @@ public:
 	RGBImageStudent(const RGBImageStudent &other);
 	RGBImageStudent(const int width, const int height);
 	~RGBImageStudent();
-
+	std::vector<std::vector<RGB>> pixelstorage;
 	void set(const int width, const int height);
 	void set(const RGBImageStudent &other);
 

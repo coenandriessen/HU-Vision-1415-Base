@@ -5,12 +5,16 @@
 */
 
 #pragma once
+#include <vector>
 #include "Image.h"
 #include "PixelType.h"
 
 class IntensityImage: public Image {
 public:
 	IntensityImage();
+
+	std::vector<std::vector<RGB>> pixelstorage;
+
 	IntensityImage(const int width, const int height);
 	virtual ~IntensityImage();
 
