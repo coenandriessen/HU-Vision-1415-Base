@@ -15,8 +15,13 @@ bool executeSteps(DLLExecution * executor);
 
 int main(int argc, char * argv[]) {
 
+<<<<<<< HEAD
 	//ImageFactory::setImplementation(ImageFactory::DEFAULT);
 	ImageFactory::setImplementation(ImageFactory::STUDENT);
+=======
+	ImageFactory::setImplementation(ImageFactory::DEFAULT);
+	//ImageFactory::setImplementation(ImageFactory::STUDENT);
+>>>>>>> origin/master
 
 
 	ImageIO::debugFolder = "C:\\Users\\Mathijs\\Documents\\GitHub\\Vision\\testsets\\Child-1.png";
