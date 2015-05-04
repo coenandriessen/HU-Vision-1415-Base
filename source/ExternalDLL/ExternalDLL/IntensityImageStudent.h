@@ -12,8 +12,8 @@ public:
 	IntensityImageStudent(const IntensityImageStudent &other);
 	IntensityImageStudent(const int width, const int height);
 	~IntensityImageStudent();
-
-	void set(const int width, const int height);
+	std::vector<std::vector<Intensity>> pixelstorage;
+	void set(int width, int height);
 	void set(const IntensityImageStudent &other);
 
 	void setPixel(int x, int y, Intensity pixel);
