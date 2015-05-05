@@ -1,7 +1,11 @@
 #include "StudentPreProcessing.h"
-
+#include "basetimer.h"
 
 IntensityImage * StudentPreProcessing::stepToIntensityImage(const RGBImage &image) const {
+	BaseTimer basetimer;
+	basetimer.start();
+
+
 	IntensityImageStudent * output = new IntensityImageStudent();
 	output->set(image.getWidth(), image.getHeight());
 	for (int i = 0; i < image.getWidth(); i++){
@@ -19,6 +23,11 @@ IntensityImage * StudentPreProcessing::stepToIntensityImage(const RGBImage &imag
 	
 	
 	}
+	basetimer.stop();
+	std::ofstream myfile;
+	myfile.open("tijd.txt", std::ofstream::ate);
+	myfile << "tijds: " << basetimer.elapsedSeconds() << " tijd ms:" << basetimer.elapsedMilliSeconds() << "tijd us" << basetimer.elapsedMicroSeconds();
+	myfile.close();
 	return output;
 	
 }
