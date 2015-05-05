@@ -6,6 +6,7 @@
 
 #pragma once
 #include "Localization.h"
+#include "FeatureMap.h"
 class StudentLocalization :
 	public Localization {
 public:
