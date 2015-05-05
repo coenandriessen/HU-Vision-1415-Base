@@ -6,8 +6,11 @@
 
 #pragma once
 #include "IntensityImage.h"
+#include "RGBImageStudent.h"
+
 class IntensityImageStudent : public IntensityImage {
 public:
+	IntensityImageStudent stepToIntensityImage(const RGBImage &other);
 	IntensityImageStudent();
 	IntensityImageStudent(const IntensityImageStudent &other);
 	IntensityImageStudent(const int width, const int height);

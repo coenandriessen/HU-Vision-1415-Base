@@ -8,7 +8,7 @@ IntensityImageStudent::IntensityImageStudent(const IntensityImageStudent &other)
 	this->set(other.getWidth(), other.getHeight());
 	for (int i = 0; i < other.pixelstorage.size(); i++)
 	{
-		for (int ii = 0; ii < other.pixelstorage.size(); ii++){
+		for (int ii = 0; ii < other.pixelstorage.at(0).size(); ii++){
 			setPixel(i, ii, other.getPixel(i, ii));
 
 

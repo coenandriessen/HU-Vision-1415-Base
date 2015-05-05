@@ -9,7 +9,7 @@
 #include "HereBeDragons.h"
 #include "ImageFactory.h"
 #include "DLLExecution.h"
-
+#include "IntensityImageStudent.h"
 void drawFeatureDebugImage(IntensityImage &image, FeatureMap &features);
 bool executeSteps(DLLExecution * executor);
 
@@ -39,7 +39,6 @@ int main(int argc, char * argv[]) {
 
 
 	ImageIO::saveRGBImage(*input, ImageIO::getDebugFileName("debug.png"));
-
 	DLLExecution * executor = new DLLExecution(input);
 
 
@@ -68,7 +67,7 @@ int main(int argc, char * argv[]) {
 bool executeSteps(DLLExecution * executor) {
 
 	//Execute the four Pre-processing steps
-	if (!executor->executePreProcessingStep1(false)) {
+	if (!executor->executePreProcessingStep1(true)) {
 		std::cout << "Pre-processing step 1 failed!" << std::endl;
 		return false;
 	}

@@ -8,7 +8,6 @@
 #include <vector>
 #include "Image.h"
 #include "PixelType.h"
-
 class IntensityImage: public Image {
 public:
 	IntensityImage();
