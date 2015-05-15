@@ -16,8 +16,8 @@ bool executeSteps(DLLExecution * executor);
 int main(int argc, char * argv[]) {
 
 
-	ImageFactory::setImplementation(ImageFactory::DEFAULT);
-	//ImageFactory::setImplementation(ImageFactory::STUDENT);
+	//ImageFactory::setImplementation(ImageFactory::DEFAULT);
+	ImageFactory::setImplementation(ImageFactory::STUDENT);
 
 	//ImageFactory::setImplementation(ImageFactory::DEFAULT);
 	//ImageFactory::setImplementation(ImageFactory::STUDENT);
@@ -31,7 +31,7 @@ int main(int argc, char * argv[]) {
 
 
 	RGBImage * input = ImageFactory::newRGBImage();
-	if (!ImageIO::loadImage("C:\\Users\\Mathijs\\Documents\\GitHub\\Vision\\testsets\\child-1.png", *input)) {
+	if (!ImageIO::loadImage("C:\\Users\\Mathijs\\Documents\\GitHub\\Vision\\testsets\\male-3.png", *input)) {
 		std::cout << "Image could not be loaded!" << std::endl;
 		system("pause");
 		return 0;

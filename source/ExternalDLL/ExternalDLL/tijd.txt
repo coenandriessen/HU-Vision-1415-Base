@@ -1,1 +1,1 @@
-tijds: 0.0212889 tijd ms:21tijd us21288
+tijds: 0.0260603 tijd ms:26tijd us26060
