@@ -27,8 +27,8 @@ bool StudentLocalization::stepFindChinContours(const IntensityImage &image, Feat
 	for (int i = 0; i < 19; i++){
 		bool ireg = false;
 		
-		if (i>9){}
-		else if (i < 9){ correction = correction + 1.60; }
+		if (i>9){ correction = 1; }
+		else if (i < 9){ correction =0; }
 		int checkX = MouthCenterPoint.getX();
 		int checkY = MouthCenterPoint.getY();
 		
@@ -38,17 +38,18 @@ bool StudentLocalization::stepFindChinContours(const IntensityImage &image, Feat
 		//coordX = distance * Math.cos(angleInRadians * (Math.PI / 180));
 		//degrees * 180)/pi;    graden naar rad
 		steps = startStep;
-		std::cout << "Nieuw Punt";
 		Point2D<double> gevondenPunt;
 		if (i != 9) {		//middelste kin punt weten we al als het goed is
 			while (true){
-				if (!first&&steps > startStep + 15){ std::cout << "Kan niks vinden";
+				if (!first&&steps > startStep + 10){ std::cout << "Kan niks vinden";
 				lastdif / i;
 				ireg = true;
-				std::cout << lastSteps <<"\n";
-				//gevondenPunt.set(MouthCenterPoint.getX() + ((lastSteps+correction)* std::sin(gradenInRad)), MouthCenterPoint.getY() + ((lastSteps+correction) * std::cos(gradenInRad)));
-				gevondenPunt.set(MouthCenterPoint.getX() + ((lastSteps)* std::sin(gradenInRad)), MouthCenterPoint.getY() + ((lastSteps) * std::cos(gradenInRad)));
 
+
+				//gevondenPunt.set(MouthCenterPoint.getX() + ((lastSteps+correction)* std::sin(gradenInRad)), MouthCenterPoint.getY() + ((lastSteps+correction) * std::cos(gradenInRad)));
+				//gevondenPunt.set(MouthCenterPoint.getX() + ((lastSteps)* std::sin(gradenInRad)), MouthCenterPoint.getY() + ((lastSteps) * std::cos(gradenInRad)));
+				gevondenPunt.set(MouthCenterPoint.getX() + ((lastSteps + correction)* std::sin(gradenInRad)), MouthCenterPoint.getY() + ((lastSteps + correction) * std::cos(gradenInRad)));
+				steps = lastSteps + correction;
 				break;
 				}
 				checkX = MouthCenterPoint.getX()+ (steps * std::sin(gradenInRad));
@@ -56,10 +57,11 @@ bool StudentLocalization::stepFindChinContours(const IntensityImage &image, Feat
 				Intensity pixel = image.getPixel(std::round(checkX), std::round(checkY));
 				if (int(pixel) == 0){
 					if (checkX - vorigeX <2){
-						std::cout << "fout punt";
+
 						lastdif / i;
 						ireg = true;
-						gevondenPunt.set(MouthCenterPoint.getX() + (lastSteps + correction* std::sin(gradenInRad)), MouthCenterPoint.getY() + (lastSteps + correction * std::cos(gradenInRad)));
+						gevondenPunt.set(MouthCenterPoint.getX() + ((lastSteps + correction)* std::sin(gradenInRad)), MouthCenterPoint.getY() + ((lastSteps + correction) * std::cos(gradenInRad)));
+						steps = lastSteps + correction;
 						break;
 					
 					}
@@ -69,34 +71,31 @@ bool StudentLocalization::stepFindChinContours(const IntensityImage &image, Feat
 				steps++;
 			}
 			vorigeX = checkX;
-			std::cout << checkX << " " << checkY << "\n";
+			std::cout << gevondenPunt <<"\n";
 			startStep = steps - 5;
-			std::cout << "steps: " << steps<< "\n";
-			std::cout << "Lijn: " << i << "\n";
+		
 			output.addPoint(Point2D<double>(gevondenPunt.x,gevondenPunt.y));
 
 			
 			first=false;
 			if (ireg){
-				lastSteps = steps - 5;
-				startStep = steps - 13;
+				
+				startStep = steps-5;
+				lastSteps = steps;
+
+
 			}
 			else{
 				lastdif = lastSteps - steps;
 				lastSteps = steps;
 			
 			}
+		
 
 		}
-		else{correction = -1; }
-		
+		else{ output.addPoint(ChinPoint); }
 	}
-	std::cout << ChinPoint << " MOUTH POINT \n";
-	std::cout << MouthCenterPoint << " CHIN POINT \n";
 	
-	Point2D<double> prev;
-	Point2D<double> next;
-	for (int i = 0; i < 19; i++)
 	
 
 
