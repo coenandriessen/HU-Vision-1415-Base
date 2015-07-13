@@ -82,12 +82,25 @@ void IntensityImageStudent::setPixel(int i, Intensity pixel) {
 }
 
 Intensity IntensityImageStudent::getPixel(int x, int y) const {
-	//	int throwError = 0
-	return pixelstorage.at(x).at(y);
-	return 0;
+	try{
+		return pixelstorage.at(x).at(y);      
+}
+	catch (const std::out_of_range& oor) {
+		throw std::out_of_range("out of image range");
+
+	}
+	
 }
 Intensity IntensityImageStudent::getPixel(int i) const {
 	int x = i%getWidth();
 	int y = i / getWidth();
-	return getPixel(x, y);
+	
+
+	try{
+		return getPixel(x, y);
+	}
+	catch (const std::out_of_range& oor) {
+		throw std::out_of_range("out of image range");
+
+	}
 }

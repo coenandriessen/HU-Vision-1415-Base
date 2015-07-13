@@ -40,5 +40,19 @@ IntensityImage * StudentPreProcessing::stepEdgeDetection(const IntensityImage &i
 }
 
 IntensityImage * StudentPreProcessing::stepThresholding(const IntensityImage &image) const {
-	return nullptr;
+	int index = 0;
+	while (true){
+
+		try{
+			Intensity current = image.getPixel(index);
+			if (current > 220){ Intensity pixel = Intensity(255); image.setPixel(index, index, &pixel); }
+			else{ image.setPixel(index, Intensity(0)); }
+			index++;
+
+
+
+		}
+		catch (const std::out_of_range& oor) { break; }
+	}
+
 }
