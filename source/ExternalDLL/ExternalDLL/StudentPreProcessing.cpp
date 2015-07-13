@@ -32,7 +32,28 @@ IntensityImage * StudentPreProcessing::stepToIntensityImage(const RGBImage &imag
 	
 }
 IntensityImage * StudentPreProcessing::stepScaleImage(const IntensityImage &image) const {
-	return nullptr;
+	IntensityImage* product = new IntensityImageStudent(200, 200);
+	float yScale = 200.0f / image.getHeight();
+	float xScale = 200.0f / image.getWidth();
+	for (auto Xcord = 0; Xcord < 200; ++Xcord)
+	{
+		for (auto Ycord = 0; Ycord < 200; ++Ycord)
+		{
+			Intensity pixel = image.getPixel(std::round(xScale* Xcord), std::round(yScale* Ycord));
+			product->setPixel(Xcord, Ycord, pixel);
+
+
+		}
+	}
+
+	std::cout << yScale << " " << xScale << "\n";
+
+
+	getchar();
+	return product;
+
+	
+
 }
 
 IntensityImage * StudentPreProcessing::stepEdgeDetection(const IntensityImage &image) const {
@@ -40,19 +61,23 @@ IntensityImage * StudentPreProcessing::stepEdgeDetection(const IntensityImage &i
 }
 
 IntensityImage * StudentPreProcessing::stepThresholding(const IntensityImage &image) const {
+	IntensityImage *product = new IntensityImageStudent(image.getWidth(), image.getHeight());
 	int index = 0;
-	while (true){
-
-		try{
-			Intensity current = image.getPixel(index);
-			if (current > 220){ Intensity pixel = Intensity(255); image.setPixel(index, index, &pixel); }
-			else{ image.setPixel(index, Intensity(0)); }
-			index++;
-
-
-
+	unsigned char compare = 220;
+	for (auto Xcord = 0; Xcord < image.getWidth(); ++Xcord)
+	{
+		for (auto Ycord = 0; Ycord < image.getHeight(); ++Ycord)
+		{
+			if (image.getPixel(Xcord, Ycord) > compare)
+			{
+				product->setPixel(Xcord, Ycord, 0);
+			}
+			else
+			{
+				product->setPixel(Xcord, Ycord, 255);
+			}
 		}
-		catch (const std::out_of_range& oor) { break; }
 	}
+	return product;
 
 }

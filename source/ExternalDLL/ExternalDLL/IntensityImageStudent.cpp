@@ -86,7 +86,7 @@ Intensity IntensityImageStudent::getPixel(int x, int y) const {
 		return pixelstorage.at(x).at(y);      
 }
 	catch (const std::out_of_range& oor) {
-		throw std::out_of_range("out of image range");
+		return 0;
 
 	}
 	

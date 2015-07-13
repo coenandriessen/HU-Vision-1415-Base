@@ -5,6 +5,7 @@
 */
 
 #pragma once
+#include <iostream>
 #include "ImageFactory.h"
 #include "PreProcessing.h"
 #include "IntensityImageStudent.h"
