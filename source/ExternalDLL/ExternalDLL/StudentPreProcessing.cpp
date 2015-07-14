@@ -12,7 +12,15 @@ IntensityImage * StudentPreProcessing::stepToIntensityImage(const RGBImage &imag
 		for (int ii = 0; ii < image.getHeight(); ii++){
 			Intensity pixel;
 			RGB rgb = image.getPixel(i, ii);
+			// Luma / Luminance
 			pixel = ((0.3f * rgb.r) + (0.59f*  rgb.g) + (0.11 * rgb.b));
+
+			// Averaging
+			//pixel = ((rgb.r + rgb.g + rgb.b) / 3);
+
+			// Luster
+			//pixel = ((std::min({ rgb.b, rgb.g, rgb.r })) + (std::max({ rgb.b, rgb.g, rgb.r })) / 2);
+
 			output->setPixel(i, ii, pixel);
 		}
 	}
