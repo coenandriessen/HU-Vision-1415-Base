@@ -24,14 +24,14 @@ int main(int argc, char * argv[]) {
 
 
 
-	ImageIO::debugFolder = "C:\\Users\\coen_000\\Documents\\GitHub\\Vision\\testsets\\Child-1.png";
+	ImageIO::debugFolder = "C:\\Users\\mathijs\\Documents\\GitHub\\Vision\\testsets\\debug.png";
 	ImageIO::isInDebugMode = true; //If set to false the ImageIO class will skip any image save function calls
 
 
 
 
 	RGBImage * input = ImageFactory::newRGBImage();
-	if (!ImageIO::loadImage("C:\\Users\\coen_000\\Documents\\GitHub\\Vision\\testsets\\child-1.png", *input)) {
+	if (!ImageIO::loadImage("C:\\Users\\mathijs\\Documents\\GitHub\\Vision\\testsets\\child-1.png", *input)) {
 		std::cout << "Image could not be loaded!" << std::endl;
 		system("pause");
 		return 0;

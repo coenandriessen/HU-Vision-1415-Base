@@ -25,13 +25,18 @@ IntensityImage * StudentPreProcessing::stepToIntensityImage(const RGBImage &imag
 	
 }
 IntensityImage * StudentPreProcessing::stepScaleImage(const IntensityImage &image) const {
+
+	return stepScaleImageFirstOrder(image);
+}
+IntensityImage * StudentPreProcessing::stepScaleImageZeroOrder(const IntensityImage &image) const {
 	IntensityImage* product = new IntensityImageStudent(200, 200);
-	float yScale = 200.0f / image.getHeight();
-	float xScale = 200.0f / image.getWidth();
+	float yScale = image.getHeight() / 200.0f;
+	float xScale = image.getWidth() / 200.0f;
 	for (auto Xcord = 0; Xcord < 200; ++Xcord)
 	{
 		for (auto Ycord = 0; Ycord < 200; ++Ycord)
 		{
+			//std::cout << xScale* Xcord << " " << yScale* Ycord << "\n";
 			Intensity pixel = image.getPixel(std::round(xScale* Xcord), std::round(yScale* Ycord));
 			product->setPixel(Xcord, Ycord, pixel);
 
@@ -42,6 +47,7 @@ IntensityImage * StudentPreProcessing::stepScaleImage(const IntensityImage &imag
 	std::cout << yScale << " " << xScale << "\n";
 	return product;
 }
+
 
 IntensityImage * StudentPreProcessing::stepEdgeDetection(const IntensityImage &image) const {
 	return nullptr;
@@ -67,4 +73,35 @@ IntensityImage * StudentPreProcessing::stepThresholding(const IntensityImage &im
 	}
 	return product;
 
+}
+
+IntensityImage * StudentPreProcessing::stepScaleImageFirstOrder(const IntensityImage &image) const {
+
+
+
+	IntensityImage* product = new IntensityImageStudent(200, 200);
+	float yScale = image.getHeight() / 200.0f;
+	float xScale = image.getWidth() / 200.0f;
+	for (auto Xcord = 0; Xcord < 200; ++Xcord)
+	{
+		for (auto Ycord = 0; Ycord < 200; ++Ycord)
+		{
+			//std::cout << xScale* Xcord << " " << yScale* Ycord << "\n";
+			Intensity pixel1 = image.getPixel(std::floor(xScale* Xcord), std::floor(yScale* Ycord));
+			Intensity pixel2 = image.getPixel(std::floor(xScale* Xcord), std::ceil(yScale* Ycord));
+			Intensity pixel3 = image.getPixel(std::ceil(xScale* Xcord), std::floor(yScale* Ycord));
+			Intensity pixel4 = image.getPixel(std::ceil(xScale* Xcord), std::ceil(yScale* Ycord));
+
+
+
+			Intensity pixel = (pixel1 + pixel2 + pixel3 + pixel4) / 4;
+			product->setPixel(Xcord, Ycord, pixel);
+
+
+		}
+	}
+
+	std::cout << yScale << " " << xScale << "\n";
+
+	return product;
 }
