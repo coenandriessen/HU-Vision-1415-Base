@@ -13,7 +13,7 @@ IntensityImage * StudentPreProcessing::stepToIntensityImage(const RGBImage &imag
 			
 			Intensity pixel;
 			RGB rgb = image.getPixel(i, ii);
-			pixel = (2 * rgb.r + 5 * rgb.g) / 7;
+			pixel = ((0.3f * rgb.r) + (0.59f*  rgb.g) + (0.11 * rgb.b));
 			output->setPixel(i, ii, pixel);
 		
 		
@@ -49,7 +49,6 @@ IntensityImage * StudentPreProcessing::stepScaleImage(const IntensityImage &imag
 	std::cout << yScale << " " << xScale << "\n";
 
 
-	getchar();
 	return product;
 
 	
