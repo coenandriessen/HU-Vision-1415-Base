@@ -40,9 +40,6 @@ IntensityImage * StudentPreProcessing::stepScaleImage(const IntensityImage &imag
 	}
 
 	std::cout << yScale << " " << xScale << "\n";
-
-
-	getchar();
 	return product;
 }
 
