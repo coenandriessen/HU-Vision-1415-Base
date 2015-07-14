@@ -27,7 +27,7 @@ IntensityImage * StudentPreProcessing::stepToIntensityImage(const RGBImage &imag
 	basetimer.stop();
 	std::ofstream myfile;
 	myfile.open("tijd.txt", std::ofstream::ate);
-	myfile << "tijds: " << basetimer.elapsedSeconds() << " tijd ms:" << basetimer.elapsedMilliSeconds() << "tijd us" << basetimer.elapsedMicroSeconds();
+	myfile << "Luma convert tijd in s: " << basetimer.elapsedSeconds() << " tijd ms:" << basetimer.elapsedMilliSeconds() << " tijd us" << basetimer.elapsedMicroSeconds();
 	myfile.close();
 	return output;
 	
