@@ -10,18 +10,12 @@ IntensityImage * StudentPreProcessing::stepToIntensityImage(const RGBImage &imag
 	output->set(image.getWidth(), image.getHeight());
 	for (int i = 0; i < image.getWidth(); i++){
 		for (int ii = 0; ii < image.getHeight(); ii++){
-			
 			Intensity pixel;
 			RGB rgb = image.getPixel(i, ii);
-			pixel = (2 * rgb.r + 5 * rgb.g) / 7;
-			output->setPixel(i, ii, pixel);
-		
-		
-		
-		
-		}
-	
-	
+			// Luma Y = 0.229R + 0.587G + 0.114B
+			pixel = ((0.3f * rgb.r) + (0.59f * rgb.g) + (0.11 * rgb.b));
+			output->setPixel(i, ii, pixel);				
+		}	
 	}
 	basetimer.stop();
 	std::ofstream myfile;
@@ -47,13 +41,7 @@ IntensityImage * StudentPreProcessing::stepScaleImage(const IntensityImage &imag
 	}
 
 	std::cout << yScale << " " << xScale << "\n";
-
-
-	getchar();
 	return product;
-
-	
-
 }
 
 IntensityImage * StudentPreProcessing::stepEdgeDetection(const IntensityImage &image) const {
