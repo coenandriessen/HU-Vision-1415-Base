@@ -4,8 +4,6 @@
 IntensityImage * StudentPreProcessing::stepToIntensityImage(const RGBImage &image) const {
 	BaseTimer basetimer;
 	basetimer.start();
-
-
 	IntensityImageStudent * output = new IntensityImageStudent();
 	output->set(image.getWidth(), image.getHeight());
 	for (int i = 0; i < image.getWidth(); i++){

@@ -17,6 +17,7 @@
 #include "HereBeDragons.h"
 #include "RGBImageStudent.h"
 #include "ImageFactory.h"
+#include "basetimer.h"
 
 bool DefaultLocalization::stepFindHead(const IntensityImage &imageIn, FeatureMap &features) const {
 
@@ -326,7 +327,8 @@ Point2D<double> AFairySong(const IntensityImage &image, Point2D<double> A, int F
 
 
 bool DefaultLocalization::stepFindChinContours(const IntensityImage &image, FeatureMap &features) const {
-
+	BaseTimer basetimer;
+	basetimer.start();
 	Point2D<double> OverHillOverDale = features.getFeature(Feature::FEATURE_MOUTH_CENTER).getPoints()[0];
 	int ThoroughBushThoroughBrier = (int) (features.getFeature(Feature::FEATURE_CHIN).getY() - features.getFeature(Feature::FEATURE_MOUTH_CENTER).getY());
 	int OverParkOverPale = ThoroughBushThoroughBrier * 2;
@@ -345,6 +347,11 @@ bool DefaultLocalization::stepFindChinContours(const IntensityImage &image, Feat
 		}
 	}
 	features.putFeature(IDoWanderEverywhere);
+	basetimer.stop();
+	std::ofstream myfile;
+	myfile.open("tijd.txt", std::ofstream::ate);
+	myfile << "Chincontours default convert tijd in s: " << basetimer.elapsedSeconds() << " tijd ms:" << basetimer.elapsedMilliSeconds() << " tijd us" << basetimer.elapsedMicroSeconds();
+	myfile.close();
 	return true;
 }
 

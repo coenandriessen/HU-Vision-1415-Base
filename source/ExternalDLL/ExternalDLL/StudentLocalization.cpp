@@ -1,5 +1,7 @@
 #include "StudentLocalization.h"
 #include <math.h>
+#include "basetimer.h"
+
 bool StudentLocalization::stepFindHead(const IntensityImage &image, FeatureMap &features) const {
 	return false;
 }
@@ -9,6 +11,8 @@ bool StudentLocalization::stepFindNoseMouthAndChin(const IntensityImage &image, 
 }
 const double PI = 3.141592653589793238463;
 bool StudentLocalization::stepFindChinContours(const IntensityImage &image, FeatureMap &features) const {
+	BaseTimer basetimer;
+	basetimer.start();
 	int startStep = 15; // test getal 
 	bool first = true;
 
@@ -95,15 +99,12 @@ bool StudentLocalization::stepFindChinContours(const IntensityImage &image, Feat
 		}
 		else{ output.addPoint(ChinPoint); }
 	}
-	
-	
-
-
-
-
-
-
 	features.putFeature(output);
+	basetimer.stop();
+	std::ofstream myfile;
+	myfile.open("tijd.txt", std::ofstream::ate);
+	myfile << "Chincontours convert tijd in s: " << basetimer.elapsedSeconds() << " tijd ms:" << basetimer.elapsedMilliSeconds() << " tijd us" << basetimer.elapsedMicroSeconds();
+	myfile.close();
 	return true;
 }
 
