@@ -51,7 +51,7 @@ IntensityImage * DefaultPreProcessing::stepEdgeDetection(const IntensityImage &s
 	basetimer.stop();
 	// Schrijf de tijd dat nodig is geweest naar een output file.
 	std::ofstream myfile;
-	myfile.open("tijd.txt", std::ofstream::ate);
+	myfile.open("tijdedge.txt", std::ofstream::ate);
 	myfile << "EdgeDetectionDefault convert tijd in s: " << basetimer.elapsedSeconds() << " tijd ms:"
 		<< basetimer.elapsedMilliSeconds() << " tijd us" << basetimer.elapsedMicroSeconds();
 	myfile.close();

@@ -111,11 +111,12 @@ IntensityImage * StudentPreProcessing::stepEdgeDetection(const IntensityImage &i
 	// Start de basetimer.
 	basetimer.start();
 	// Maak een object aan om de nieuwe afbeelding in op te slaan.
-	IntensityImage * output = new IntensityImageStudent(image.getHeight(), image.getWidth());
+	IntensityImage * output = new IntensityImageStudent();
 	// Pas op elke pixel het kernel toe. De randen van de afbeelding worden vermeden.
-	for (int Xcord = 5; Xcord < image.getWidth()-5; Xcord++)
+	output->set(image.getWidth(), image.getHeight());
+	for (int Xcord = 4; Xcord < image.getWidth()-4; Xcord++)
 	{
-		for (int Ycord = 5; Ycord < image.getHeight()-5; Ycord++)
+		for (int Ycord = 4; Ycord < image.getHeight()-4; Ycord++)
 		{
 			// Variabele voor het opslaan van de pixel waarde.
 			int weight = 0;
@@ -144,14 +145,14 @@ IntensityImage * StudentPreProcessing::stepEdgeDetection(const IntensityImage &i
 				val = 221; 
 			}
 			// Set de pixel waarde in de nieuwe afbeelding.
-			output->setPixel(Xcord, Ycord, val);
+			output->setPixel(Xcord - 4, Ycord - 4, val);
 		}
 	}
 	// Stop de timer
 	basetimer.stop();
 	// Schrijf de tijd dat nodig is geweest naar een output file.
 	std::ofstream myfile;
-	myfile.open("tijd.txt", std::ofstream::ate);
+	myfile.open("tijdedge.txt", std::ofstream::ate);
 	myfile << "EdgeDetectionStudent convert tijd in s: " << basetimer.elapsedSeconds() << " tijd ms:"
 		<< basetimer.elapsedMilliSeconds() << " tijd us" << basetimer.elapsedMicroSeconds();
 	myfile.close();
