@@ -112,8 +112,9 @@ IntensityImage * StudentPreProcessing::stepEdgeDetection(const IntensityImage &i
 	basetimer.start();
 	// Maak een object aan om de nieuwe afbeelding in op te slaan.
 	IntensityImage * output = new IntensityImageStudent();
-	// Pas op elke pixel het kernel toe. De randen van de afbeelding worden vermeden.
+	// Set grootte en breedte van de nieuwe afbeelding.
 	output->set(image.getWidth(), image.getHeight());
+	// Pas op elke pixel het kernel toe. De randen van de afbeelding worden vermeden.
 	for (int Xcord = 4; Xcord < image.getWidth()-4; Xcord++)
 	{
 		for (int Ycord = 4; Ycord < image.getHeight()-4; Ycord++)
