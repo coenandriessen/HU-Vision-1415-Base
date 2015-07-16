@@ -50,29 +50,38 @@ IntensityImage * StudentPreProcessing::stepToIntensityImage(const RGBImage &imag
 }
 	
 IntensityImage * StudentPreProcessing::stepScaleImage(const IntensityImage &image) const {
+	stepScaleImageZeroOrder(image);
 	return stepScaleImageFirstOrder(image);
 }
 
 IntensityImage * StudentPreProcessing::stepScaleImageZeroOrder(const IntensityImage &image) const {
+	BaseTimer basetimer;
+	basetimer.start();
 	std::cout << "scale";
+	double scale;
+	if (image.getHeight()*image.getWidth() > 200 * 200){ scale = sqrt(200 * 200 / static_cast<double>(image.getWidth() * image.getHeight())); }
+	else{ scale = sqrt(image.getWidth() * image.getHeight() / static_cast<double>(image.getWidth() * image.getHeight())); }
 
-	if (image.getHeight()*image.getWidth() > 200 * 200){
-
-		auto scale = sqrt(200*200 / static_cast<double>(image.getWidth() * image.getHeight()));
 		IntensityImage* product = new IntensityImageStudent(image.getWidth()*scale, image.getWidth()*scale);
 
 		for (auto Xcord = 0; Xcord < image.getWidth()*scale; ++Xcord)
-	{
-			for (auto Ycord = 0; Ycord < image.getWidth()*scale; ++Ycord)
 		{
-			//std::cout << xScale* Xcord << " " << yScale* Ycord << "\n";
+			for (auto Ycord = 0; Ycord < image.getWidth()*scale; ++Ycord)
+			{
+				//std::cout << xScale* Xcord << " " << yScale* Ycord << "\n";
 				Intensity pixel = image.getPixel(std::round(scale* Xcord), std::round(scale* Ycord));
-			product->setPixel(Xcord, Ycord, pixel);
+				product->setPixel(Xcord, Ycord, pixel);
+			}
 		}
-	}
+		basetimer.stop();
+		std::ofstream myfile;
+		myfile.open("tijdZeroOrderScale.txt", std::ofstream::ate);
+		myfile << "Zero Order Scale convert tijd in s: " << basetimer.elapsedSeconds() << " tijd ms:" << basetimer.elapsedMilliSeconds() << " tijd us" << basetimer.elapsedMicroSeconds();
+		myfile.close();
 	return product;
-}
-	else{ return new IntensityImageStudent(); }
+
+	
+
 
 }
 
@@ -103,11 +112,11 @@ IntensityImage * StudentPreProcessing::stepThresholding(const IntensityImage &im
 }
 
 IntensityImage * StudentPreProcessing::stepScaleImageFirstOrder(const IntensityImage &image) const {
-	std::cout << "scale";
-
-	if (image.getHeight()*image.getWidth() > 200 * 200){
-
-		double scale = sqrt(200 * 200 / static_cast<double>(image.getWidth() * image.getHeight()));
+	BaseTimer basetimer;
+	basetimer.start();
+	double scale;
+	if (image.getHeight()*image.getWidth() > 200 * 200){ scale = sqrt(200 * 200 / static_cast<double>(image.getWidth() * image.getHeight())); }
+	else{ scale = sqrt(image.getWidth() * image.getHeight() / static_cast<double>(image.getWidth() * image.getHeight())); }
 		IntensityImage* product = new IntensityImageStudent(image.getWidth()*scale, image.getHeight()*scale);
 
 		for (auto Xcord = 0; Xcord < product->getWidth(); ++Xcord)
@@ -125,11 +134,10 @@ IntensityImage * StudentPreProcessing::stepScaleImageFirstOrder(const IntensityI
 			product->setPixel(Xcord, Ycord, pixel);
 		}
 	}
-
-		std::cout << scale << " " << scale << "\n";
-		std::cout << product->getHeight() << " " << product->getWidth();
-		getchar();
+		std::ofstream myfile;
+		myfile.open("tijdFirstOrderScale.txt", std::ofstream::ate);
+		myfile << "First Order Scale convert tijd in s: " << basetimer.elapsedSeconds() << " tijd ms:" << basetimer.elapsedMilliSeconds() << " tijd us" << basetimer.elapsedMicroSeconds();
+		myfile.close();
 	return product;
-}
-	else { std::cout << "fuck"; getchar(); }
+
 }
