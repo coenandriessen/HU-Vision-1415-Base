@@ -1,6 +1,30 @@
 #include "StudentPreProcessing.h"
 #include "basetimer.h"
 
+
+const int Guassian_filter[5][5] =
+{
+	{ 2, 4, 5, 4, 2 },
+	{ 4, 9, 12, 9, 4 },
+	{ 5, 12, 15, 12, 5 },
+	{ 4, 9, 12, 9, 4 },
+	{ 2, 4, 5, 4, 2 }
+};
+
+const int sobel_x[3][3] =
+{
+	{ -1, 0, 1},
+	{ -2, 0, 2},
+	{ -1, 0, 1}
+};
+
+const int sobel_y[3][3] =
+{
+	{ -1, -2, -1 },
+	{ 0, 0, 0 },
+	{ 1, 2, 1 }
+};
+
 /**
 * Functie voor het converteren van een afbeedling van rgb naar grijswaarde.
 *
@@ -72,7 +96,58 @@ IntensityImage * StudentPreProcessing::stepScaleImageZeroOrder(const IntensityIm
 
 
 IntensityImage * StudentPreProcessing::stepEdgeDetection(const IntensityImage &image) const {
-	return nullptr;
+	// Maak de output voor de afeelding aan.
+	IntensityImageStudent * output = new IntensityImageStudent();
+	// Set de hoogte en breedte van de output afbeelding.
+	output->set(image.getWidth() - 1, image.getHeight() - 1);
+	//IntensityImageStudent * henk = stepThresholding(image);
+	/*
+	// Maak variabele aan voor opslaan van pixel waarde.
+	int temp_pixel;
+	for (int y = 2; y < image.getWidth() - 2; y++)
+	{
+		for (int x = 2; x < image.getHeight() - 2; x++)
+		{
+			temp_pixel = 0;
+			for (int yy = -2; yy < 3; yy++)
+			{
+				for (int xx = -2; xx < 3; xx++)
+				{
+					int pixel_value = image.getPixel(x + xx, y + yy);
+					temp_pixel += pixel_value * Guassian_filter[xx + 2][yy + 2];
+				}
+			}
+			output->setPixel(x - 2, y - 2, static_cast<int>(temp_pixel));
+		}
+	}
+	*/
+
+	// sobel
+	int x_weight = 0;
+	int y_weight = 0;
+	for (int i = 0; i < image.getHeight() -1; i++)
+	{
+		for (int j = 0; j < image.getWidth() -1; j++)
+		{
+			for (int ii = 0; i < 4; i++)
+			{
+				for (int jj = 0; i < 4; jj++)
+				{
+					x_weight += image.getPixel(i, j) * sobel_x[ii][jj];
+					y_weight += image.getPixel(i, j) * sobel_y[ii][jj];
+				}
+			}
+			short val = abs(x_weight) + abs(y_weight);
+			//make sure the pixel value is between 0 and 255 and add thresholds
+			if (val>200)
+				val = 255;
+			else if (val<100)
+				val = 0;
+			int ans = 255 - (unsigned char)(val);
+			output->setPixel(j, i, ans);
+		}
+	}
+	return output;
 }
 
 IntensityImage * StudentPreProcessing::stepThresholding(const IntensityImage &image) const {
