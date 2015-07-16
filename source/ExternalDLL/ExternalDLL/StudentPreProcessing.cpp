@@ -1,17 +1,7 @@
 #include "StudentPreProcessing.h"
 #include "basetimer.h"
 
-
-const int Guassian_filter[5][5] =
-{
-	{ 2, 4, 5, 4, 2 },
-	{ 4, 9, 12, 9, 4 },
-	{ 5, 12, 15, 12, 5 },
-	{ 4, 9, 12, 9, 4 },
-	{ 2, 4, 5, 4, 2 }
-};
-
-const int sobel_x[9][9] =
+const int Laplacian[9][9] =
 {
 	{ 0, 0, 0,1,1,1,0,0,0},
 	{ 0, 0, 0, 1, 1, 1, 0, 0, 0 },
@@ -104,43 +94,68 @@ IntensityImage * StudentPreProcessing::stepScaleImageZeroOrder(const IntensityIm
 		myfile << "Zero Order Scale convert tijd in s: " << basetimer.elapsedSeconds() << " tijd ms:" << basetimer.elapsedMilliSeconds() << " tijd us" << basetimer.elapsedMicroSeconds();
 		myfile.close();
 	return product;
-
-	
-
-
 }
 
+/**
+* Functie voor het detecteren van edge in een afbeelding
+*
+* @param const	RGBImage &image
+*
+* @return		output
+*/
 
 IntensityImage * StudentPreProcessing::stepEdgeDetection(const IntensityImage &image) const {
-	// Maak de output voor de afeelding aan.
-	
+	// Maak een basetimer aan. De basetimer wordt gebruikt om de tijd bij te houden
+	// die de implementatie gebruikt.
+	BaseTimer basetimer;
+	// Start de basetimer.
+	basetimer.start();
+	// Maak een object aan om de nieuwe afbeelding in op te slaan.
 	IntensityImage * output = new IntensityImageStudent(image.getHeight(), image.getWidth());
-	// Set de hoogte en breedte van de output afbeelding.
-	
-	//IntensityImageStudent * henk = stepThresholding(image);
-	
-	// Maak variabele aan voor opslaan van pixel waarde.
-	//output->set(image.getWidth() - 1, image.getHeight() - 1);
-	// sobel
-
+	// Pas op elke pixel het kernel toe. De randen van de afbeelding worden vermeden.
 	for (int Xcord = 5; Xcord < image.getWidth()-5; Xcord++)
 	{
 		for (int Ycord = 5; Ycord < image.getHeight()-5; Ycord++)
 		{
+			// Variabele voor het opslaan van de pixel waarde.
 			int weight = 0;
-			for (int i = -4; i < 5; i++){
-				for (int j = -4; j<5; j++){
+			// Doorloop het hele kernel.
+			for (int i = -4; i < 5; i++)
+			{
+				for (int j = -4; j < 5; j++)
+				{
+					// Sla de pixelwaarde op.
 					int pixelvalue = static_cast<int>(image.getPixel(i + Xcord, j + Ycord));
-					int sobelvalue = sobel_x[i + 4][j + 4];
-					weight = weight + (pixelvalue * sobelvalue);
+					// Sla de Laplacian waarde op.
+					int laplacianvalue = Laplacian[i + 4][j + 4];
+					// Bereken het nieuwe gewicht van de pixel door de pixelwaarde en laplacianwaarde
+					// te vermenigvuldige en deze bij de weight op te tellen.
+					weight = weight + (pixelvalue * laplacianvalue);
 				}
 			}
+			// Wanneer de val grootte is dan bepaalde waardes pas deze aan. Dit verkomt
+			// dat er meerdere verschillende soorten waardes ontstaan.
 			int val = weight;
-			if (val<0){ val = 0; }
-			if (val>255){ val = 221; }
+			if (val<0)
+			{ 
+				val = 0; 
+			}
+			if (val>255){ 
+				val = 221; 
+			}
+			// Set de pixel waarde in de nieuwe afbeelding.
 			output->setPixel(Xcord, Ycord, val);
 		}
 	}
+	// Stop de timer
+	basetimer.stop();
+	// Schrijf de tijd dat nodig is geweest naar een output file.
+	std::ofstream myfile;
+	myfile.open("tijd.txt", std::ofstream::ate);
+	myfile << "EdgeDetectionStudent convert tijd in s: " << basetimer.elapsedSeconds() << " tijd ms:"
+		<< basetimer.elapsedMilliSeconds() << " tijd us" << basetimer.elapsedMicroSeconds();
+	myfile.close();
+	// return de gemaakte afbeelding.
 	return output;
 }
 
@@ -174,7 +189,7 @@ IntensityImage * StudentPreProcessing::stepScaleImageFirstOrder(const IntensityI
 		IntensityImage* product = new IntensityImageStudent(image.getWidth()*scale, image.getHeight()*scale);
 
 		for (auto Xcord = 0; Xcord < product->getWidth(); ++Xcord)
-	{
+		{
 			for (auto Ycord = 0; Ycord < product->getHeight(); ++Ycord)
 		{
 				Intensity pixel1 = image.getPixel(std::floor(Xcord * (1 / scale)), std::floor(Ycord * (1 / scale)));

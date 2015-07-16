@@ -9,6 +9,7 @@
 #include "GrayscaleAlgorithm.h"
 #include "ImageFactory.h"
 #include "HereBeDragons.h"
+#include "basetimer.h"
 
 IntensityImage * DefaultPreProcessing::stepToIntensityImage(const RGBImage &src) const {
 	GrayscaleAlgorithm grayScaleAlgorithm;
@@ -32,6 +33,11 @@ IntensityImage * DefaultPreProcessing::stepScaleImage(const IntensityImage &src)
 }
 
 IntensityImage * DefaultPreProcessing::stepEdgeDetection(const IntensityImage &src) const {
+	// Maak een basetimer aan. De basetimer wordt gebruikt om de tijd bij te houden
+	// die de implementatie gebruikt.
+	BaseTimer basetimer;
+	// Start de basetimer.
+	basetimer.start();
 	cv::Mat OverHillOverDale;
 	HereBeDragons::HerLoveForWhoseDearLoveIRiseAndFall(src, OverHillOverDale);
 	//cv::medianBlur(*image, *image, 3);
@@ -41,6 +47,15 @@ IntensityImage * DefaultPreProcessing::stepEdgeDetection(const IntensityImage &s
 	filter2D(OverHillOverDale, OverParkOverPale, CV_8U, ThoroughBushThoroughBrier, cv::Point(-1, -1), 0, cv::BORDER_DEFAULT);
 	IntensityImage * ThoroughFloodThoroughFire = ImageFactory::newIntensityImage();
 	HereBeDragons::NoWantOfConscienceHoldItThatICall(OverParkOverPale, *ThoroughFloodThoroughFire);
+	// Stop de timer
+	basetimer.stop();
+	// Schrijf de tijd dat nodig is geweest naar een output file.
+	std::ofstream myfile;
+	myfile.open("tijd.txt", std::ofstream::ate);
+	myfile << "EdgeDetectionDefault convert tijd in s: " << basetimer.elapsedSeconds() << " tijd ms:"
+		<< basetimer.elapsedMilliSeconds() << " tijd us" << basetimer.elapsedMicroSeconds();
+	myfile.close();
+	// return de gemaakte afbeelding.
 	return ThoroughFloodThoroughFire;
 }
 
