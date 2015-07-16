@@ -78,20 +78,26 @@ IntensityImage * StudentPreProcessing::stepScaleImage(const IntensityImage &imag
 }
 
 IntensityImage * StudentPreProcessing::stepScaleImageZeroOrder(const IntensityImage &image) const {
-	IntensityImage* product = new IntensityImageStudent(200, 200);
-	float yScale = image.getHeight() / 200.0f;
-	float xScale = image.getWidth() / 200.0f;
-	for (auto Xcord = 0; Xcord < 200; ++Xcord)
+	std::cout << "scale";
+
+	if (image.getHeight()*image.getWidth() > 200 * 200){
+
+		auto scale = sqrt(200*200 / static_cast<double>(image.getWidth() * image.getHeight()));
+		IntensityImage* product = new IntensityImageStudent(image.getWidth()*scale, image.getWidth()*scale);
+
+		for (auto Xcord = 0; Xcord < image.getWidth()*scale; ++Xcord)
 	{
-		for (auto Ycord = 0; Ycord < 200; ++Ycord)
+			for (auto Ycord = 0; Ycord < image.getWidth()*scale; ++Ycord)
 		{
 			//std::cout << xScale* Xcord << " " << yScale* Ycord << "\n";
-			Intensity pixel = image.getPixel(std::round(xScale* Xcord), std::round(yScale* Ycord));
+				Intensity pixel = image.getPixel(std::round(scale* Xcord), std::round(scale* Ycord));
 			product->setPixel(Xcord, Ycord, pixel);
 		}
 	}
-	std::cout << yScale << " " << xScale << "\n";
 	return product;
+}
+	else{ return new IntensityImageStudent(); }
+
 }
 
 
@@ -172,22 +178,33 @@ IntensityImage * StudentPreProcessing::stepThresholding(const IntensityImage &im
 }
 
 IntensityImage * StudentPreProcessing::stepScaleImageFirstOrder(const IntensityImage &image) const {
-	IntensityImage* product = new IntensityImageStudent(200, 200);
-	float yScale = image.getHeight() / 200.0f;
-	float xScale = image.getWidth() / 200.0f;
-	for (auto Xcord = 0; Xcord < 200; ++Xcord)
+	std::cout << "scale";
+
+	if (image.getHeight()*image.getWidth() > 200 * 200){
+
+		double scale = sqrt(200 * 200 / static_cast<double>(image.getWidth() * image.getHeight()));
+		IntensityImage* product = new IntensityImageStudent(image.getWidth()*scale, image.getHeight()*scale);
+
+		for (auto Xcord = 0; Xcord < product->getWidth(); ++Xcord)
 	{
-		for (auto Ycord = 0; Ycord < 200; ++Ycord)
+			for (auto Ycord = 0; Ycord < product->getHeight(); ++Ycord)
 		{
-			//std::cout << xScale* Xcord << " " << yScale* Ycord << "\n";
-			Intensity pixel1 = image.getPixel(std::floor(xScale* Xcord), std::floor(yScale* Ycord));
-			Intensity pixel2 = image.getPixel(std::floor(xScale* Xcord), std::ceil(yScale* Ycord));
-			Intensity pixel3 = image.getPixel(std::ceil(xScale* Xcord), std::floor(yScale* Ycord));
-			Intensity pixel4 = image.getPixel(std::ceil(xScale* Xcord), std::ceil(yScale* Ycord));
+				Intensity pixel1 = image.getPixel(std::floor(Xcord * (1 / scale)), std::floor(Ycord * (1 / scale)));
+				Intensity pixel2 = image.getPixel(std::floor(Xcord * (1 / scale)), std::ceil(Ycord * (1 / scale)));
+				Intensity pixel3 = image.getPixel(std::ceil(Xcord * (1 / scale)), std::floor(Ycord * (1 / scale)));
+				Intensity pixel4 = image.getPixel(std::ceil(Xcord * (1 / scale)), std::ceil(Ycord * (1 / scale)));
+
+
+
 			Intensity pixel = (pixel1 + pixel2 + pixel3 + pixel4) / 4;
 			product->setPixel(Xcord, Ycord, pixel);
 		}
 	}
-	std::cout << yScale << " " << xScale << "\n";
+
+		std::cout << scale << " " << scale << "\n";
+		std::cout << product->getHeight() << " " << product->getWidth();
+		getchar();
 	return product;
+}
+	else { std::cout << "fuck"; getchar(); }
 }
