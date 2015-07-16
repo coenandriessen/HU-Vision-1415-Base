@@ -11,20 +11,21 @@ const int Guassian_filter[5][5] =
 	{ 2, 4, 5, 4, 2 }
 };
 
-const int sobel_x[3][3] =
+const int sobel_x[9][9] =
 {
-	{ -1, 0, 1},
-	{ -2, 0, 2},
-	{ -1, 0, 1}
-};
+	{ 0, 0, 0,1,1,1,0,0,0},
+	{ 0, 0, 0, 1, 1, 1, 0, 0, 0 },
+	{ 0, 0, 0, 1, 1, 1, 0, 0, 0 },
 
-const int sobel_y[3][3] =
-{
-	{ -1, -2, -1 },
-	{ 0, 0, 0 },
-	{ 1, 2, 1 }
-};
+	{ 1, 1, 1, -4, -4, -4, 1, 1, 1 },
+	{ 1, 1, 1, -4, -4, -4, 1, 1, 1 },
+	{ 1, 1, 1, -4, -4, -4, 1, 1, 1 },
 
+	{ 0, 0, 0, 1, 1, 1, 0, 0, 0 },
+	{ 0, 0, 0, 1, 1, 1, 0, 0, 0 },
+	{ 0, 0, 0, 1, 1, 1, 0, 0, 0 }
+
+};
 /**
 * Functie voor het converteren van een afbeedling van rgb naar grijswaarde.
 *
@@ -112,54 +113,32 @@ IntensityImage * StudentPreProcessing::stepScaleImageZeroOrder(const IntensityIm
 
 IntensityImage * StudentPreProcessing::stepEdgeDetection(const IntensityImage &image) const {
 	// Maak de output voor de afeelding aan.
-	IntensityImageStudent * output = new IntensityImageStudent();
+	
+	IntensityImage * output = new IntensityImageStudent(image.getHeight(), image.getWidth());
 	// Set de hoogte en breedte van de output afbeelding.
-	output->set(image.getWidth() - 1, image.getHeight() - 1);
+	
 	//IntensityImageStudent * henk = stepThresholding(image);
-	/*
+	
 	// Maak variabele aan voor opslaan van pixel waarde.
-	int temp_pixel;
-	for (int y = 2; y < image.getWidth() - 2; y++)
-	{
-		for (int x = 2; x < image.getHeight() - 2; x++)
-		{
-			temp_pixel = 0;
-			for (int yy = -2; yy < 3; yy++)
-			{
-				for (int xx = -2; xx < 3; xx++)
-				{
-					int pixel_value = image.getPixel(x + xx, y + yy);
-					temp_pixel += pixel_value * Guassian_filter[xx + 2][yy + 2];
-				}
-			}
-			output->setPixel(x - 2, y - 2, static_cast<int>(temp_pixel));
-		}
-	}
-	*/
-
+	//output->set(image.getWidth() - 1, image.getHeight() - 1);
 	// sobel
-	int x_weight = 0;
-	int y_weight = 0;
-	for (int i = 0; i < image.getHeight() -1; i++)
+
+	for (int Xcord = 5; Xcord < image.getWidth()-5; Xcord++)
 	{
-		for (int j = 0; j < image.getWidth() -1; j++)
+		for (int Ycord = 5; Ycord < image.getHeight()-5; Ycord++)
 		{
-			for (int ii = 0; i < 4; i++)
-			{
-				for (int jj = 0; i < 4; jj++)
-				{
-					x_weight += image.getPixel(i, j) * sobel_x[ii][jj];
-					y_weight += image.getPixel(i, j) * sobel_y[ii][jj];
+			int weight = 0;
+			for (int i = -4; i < 5; i++){
+				for (int j = -4; j<5; j++){
+					int pixelvalue = static_cast<int>(image.getPixel(i + Xcord, j + Ycord));
+					int sobelvalue = sobel_x[i + 4][j + 4];
+					weight = weight + (pixelvalue * sobelvalue);
 				}
 			}
-			short val = abs(x_weight) + abs(y_weight);
-			//make sure the pixel value is between 0 and 255 and add thresholds
-			if (val>200)
-				val = 255;
-			else if (val<100)
-				val = 0;
-			int ans = 255 - (unsigned char)(val);
-			output->setPixel(j, i, ans);
+			int val = weight;
+			if (val<0){ val = 0; }
+			if (val>255){ val = 221; }
+			output->setPixel(Xcord, Ycord, val);
 		}
 	}
 	return output;
@@ -216,3 +195,6 @@ IntensityImage * StudentPreProcessing::stepScaleImageFirstOrder(const IntensityI
 	return product;
 
 }
+
+
+
