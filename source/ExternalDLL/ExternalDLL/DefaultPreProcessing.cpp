@@ -60,10 +60,23 @@ IntensityImage * DefaultPreProcessing::stepEdgeDetection(const IntensityImage &s
 }
 
 IntensityImage * DefaultPreProcessing::stepThresholding(const IntensityImage &src) const {
+	// Maak een basetimer aan. De basetimer wordt gebruikt om de tijd bij te houden
+	// die de implementatie gebruikt.
+	BaseTimer basetimer;
+	// Start de basetimer.
+	basetimer.start();
 	cv::Mat OverHillOverDale;
 	HereBeDragons::HerLoveForWhoseDearLoveIRiseAndFall(src, OverHillOverDale);
 	cv::threshold(OverHillOverDale, OverHillOverDale, 220, 255, cv::THRESH_BINARY_INV);
 	IntensityImage * ThoroughBushThoroughBrier = ImageFactory::newIntensityImage();
 	HereBeDragons::NoWantOfConscienceHoldItThatICall(OverHillOverDale, *ThoroughBushThoroughBrier);
+	// Stop de timer
+	basetimer.stop();
+	// Schrijf de tijd dat nodig is geweest naar een output file.
+	std::ofstream myfile;
+	myfile.open("tijdtresholding.txt", std::ofstream::ate);
+	myfile << "ThresholdingDefault convert tijd in s: " << basetimer.elapsedSeconds() << " tijd ms:"
+		<< basetimer.elapsedMilliSeconds() << " tijd us" << basetimer.elapsedMicroSeconds();
+	myfile.close();
 	return ThoroughBushThoroughBrier;
 }

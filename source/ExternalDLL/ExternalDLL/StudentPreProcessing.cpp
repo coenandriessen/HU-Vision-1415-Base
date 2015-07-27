@@ -162,13 +162,53 @@ IntensityImage * StudentPreProcessing::stepEdgeDetection(const IntensityImage &i
 }
 
 IntensityImage * StudentPreProcessing::stepThresholding(const IntensityImage &image) const {
+	// Maak een basetimer aan. De basetimer wordt gebruikt om de tijd bij te houden
+	// die de implementatie gebruikt.
+	BaseTimer basetimer;
+	// Start de basetimer.
+	basetimer.start();
+	// Maak afbeelding aan voor het opslaan van de binaire afbeelding.
 	IntensityImage *product = new IntensityImageStudent(image.getWidth(), image.getHeight());
 	int index = 0;
-	unsigned char compare = 220;
+	unsigned char lowest = 0;
+	unsigned char highest = 0;
+	unsigned char compare = 0;
+	// Zoek naar de laagste pixel waarde.
 	for (auto Xcord = 0; Xcord < image.getWidth(); ++Xcord)
 	{
 		for (auto Ycord = 0; Ycord < image.getHeight(); ++Ycord)
 		{
+			// Vergelijk of de pixel waarde lager is dan de lowest waarde.
+			// Kleiner zet lowest gelijk aan de pixelwaarde.
+			if (image.getPixel(Xcord, Ycord) < lowest)
+			{
+				lowest = image.getPixel(Xcord, Ycord);
+			}
+		}
+	}
+	// Zoek naar de hoogste pixel waarde.
+	for (auto Xcord = 0; Xcord < image.getWidth(); ++Xcord)
+	{
+		for (auto Ycord = 0; Ycord < image.getHeight(); ++Ycord)
+		{
+			// Vergelijk of de pixel waarde groter is dan de highest waarde.
+			// Groter zet highest gelijk aan de pixelwaarde.
+			if (image.getPixel(Xcord, Ycord) > highest)
+			{
+				highest = image.getPixel(Xcord, Ycord);
+			}
+		}
+	}
+
+	compare = (lowest + highest) / 2;
+	// Zet de pixel op zwart of wit.
+	// Doorloop alle pixels in de afbeelding.
+	for (auto Xcord = 0; Xcord < image.getWidth(); ++Xcord)
+	{
+		for (auto Ycord = 0; Ycord < image.getHeight(); ++Ycord)
+		{
+			// Vergelijk of de pixel waarde groter is dan de compare waarde.
+			// Groter zet pixel op 0 anders op 255.
 			if (image.getPixel(Xcord, Ycord) > compare)
 			{
 				product->setPixel(Xcord, Ycord, 0);
@@ -179,6 +219,15 @@ IntensityImage * StudentPreProcessing::stepThresholding(const IntensityImage &im
 			}
 		}
 	}
+	// Stop de timer
+	basetimer.stop();
+	// Schrijf de tijd dat nodig is geweest naar een output file.
+	std::ofstream myfile;
+	myfile.open("tijdtresholding.txt", std::ofstream::ate);
+	myfile << "ThresholdingStudent convert tijd in s: " << basetimer.elapsedSeconds() << " tijd ms:"
+		<< basetimer.elapsedMilliSeconds() << " tijd us" << basetimer.elapsedMicroSeconds();
+	myfile.close();
+	// Return de binaire afbeelding.
 	return product;
 }
 
