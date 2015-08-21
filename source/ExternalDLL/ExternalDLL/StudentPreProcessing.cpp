@@ -65,7 +65,6 @@ IntensityImage * StudentPreProcessing::stepToIntensityImage(const RGBImage &imag
 }
 	
 IntensityImage * StudentPreProcessing::stepScaleImage(const IntensityImage &image) const {
-	stepScaleImageZeroOrder(image);
 	return stepScaleImageFirstOrder(image);
 }
 
