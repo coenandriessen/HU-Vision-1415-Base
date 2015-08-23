@@ -1,6 +1,7 @@
 #include "StudentPreProcessing.h"
 #include "basetimer.h"
 
+// Laplacian filter
 const int Laplacian[9][9] =
 {
 	{ 0, 0, 0,1,1,1,0,0,0},
@@ -68,30 +69,48 @@ IntensityImage * StudentPreProcessing::stepScaleImage(const IntensityImage &imag
 	return stepScaleImageFirstOrder(image);
 }
 
+/**
+* Functie voor het scale van een afbeedling via zero order.
+*
+* @param const	RGBImage &image
+*
+* @return		product
+*/
+
 IntensityImage * StudentPreProcessing::stepScaleImageZeroOrder(const IntensityImage &image) const {
+	// Maak basetimer aan om tijd bij te houden dat het proces kost.
 	BaseTimer basetimer;
+	// Start de timer.
 	basetimer.start();
-	std::cout << "scale";
 	double scale;
-	if (image.getHeight()*image.getWidth() > 200 * 200){ scale = sqrt(200 * 200 / static_cast<double>(image.getWidth() * image.getHeight())); }
-	else{ scale = sqrt(image.getWidth() * image.getHeight() / static_cast<double>(image.getWidth() * image.getHeight())); }
-
-		IntensityImage* product = new IntensityImageStudent(image.getWidth()*scale, image.getWidth()*scale);
-
-		for (auto Xcord = 0; Xcord < image.getWidth()*scale; ++Xcord)
+	// Bereken de schaal voor de nieuwe afbeelding.
+	if (image.getHeight() * image.getWidth() > 200 * 200)
+	{ 
+		scale = sqrt(200 * 200 / static_cast<double> (image.getWidth() * image.getHeight()));
+	}
+	else 
+	{ 
+		scale = sqrt(image.getWidth() * image.getHeight() / static_cast<double>(image.getWidth() * image.getHeight())); 
+	}
+	// Maak de nieuwe afbeelding aan in verhouding met de schaal die hiervoor berekent is.
+	IntensityImage* product = new IntensityImageStudent(image.getWidth() * scale, image.getWidth() * scale);
+	// Set elke pixel van de nieuwe afbeelding volgens zero order.
+	for (auto Xcord = 0; Xcord < image.getWidth()  *scale; ++Xcord)
 	{
-			for (auto Ycord = 0; Ycord < image.getWidth()*scale; ++Ycord)
+		for (auto Ycord = 0; Ycord < image.getWidth()*scale; ++Ycord)
 		{
-			//std::cout << xScale* Xcord << " " << yScale* Ycord << "\n";
-				Intensity pixel = image.getPixel(std::round(scale* Xcord), std::round(scale* Ycord));
+			Intensity pixel = image.getPixel(std::round(scale* Xcord), std::round(scale* Ycord));
 			product->setPixel(Xcord, Ycord, pixel);
 		}
 	}
-		basetimer.stop();
-		std::ofstream myfile;
-		myfile.open("tijdZeroOrderScale.txt", std::ofstream::ate);
-		myfile << "Zero Order Scale convert tijd in s: " << basetimer.elapsedSeconds() << " tijd ms:" << basetimer.elapsedMilliSeconds() << " tijd us" << basetimer.elapsedMicroSeconds();
-		myfile.close();
+	// Stop de timer.
+	basetimer.stop();
+	// Schrijf de gegevens van de timer in de betreffende tekstfile.
+	std::ofstream myfile;
+	myfile.open("tijdZeroOrderScale.txt", std::ofstream::ate);
+	myfile << "Zero Order Scale convert tijd in s: " << basetimer.elapsedSeconds() << " tijd ms:" << basetimer.elapsedMilliSeconds() << " tijd us" << basetimer.elapsedMicroSeconds();
+	myfile.close();
+	// Return de nieuwe afbeelding.
 	return product;
 }
 
@@ -230,35 +249,53 @@ IntensityImage * StudentPreProcessing::stepThresholding(const IntensityImage &im
 	return product;
 }
 
+/**
+* Functie voor het scale van een afbeedling via first order.
+*
+* @param const	RGBImage &image
+*
+* @return		product
+*/
+
 IntensityImage * StudentPreProcessing::stepScaleImageFirstOrder(const IntensityImage &image) const {
+	// Maak timer aan voor het bijhouden van de procestijd.
 	BaseTimer basetimer;
+	// Start de timer.
 	basetimer.start();
 	double scale;
-	if (image.getHeight()*image.getWidth() > 200 * 200){ scale = sqrt(200 * 200 / static_cast<double>(image.getWidth() * image.getHeight())); }
-	else{ scale = sqrt(image.getWidth() * image.getHeight() / static_cast<double>(image.getWidth() * image.getHeight())); }
-		IntensityImage* product = new IntensityImageStudent(image.getWidth()*scale, image.getHeight()*scale);
-
-		for (auto Xcord = 0; Xcord < product->getWidth(); ++Xcord)
+	// Bereken de schaal voor de nieuwe afbeelding.
+	if (image.getHeight()*image.getWidth() > 200 * 200)
+	{ 
+		scale = sqrt(200 * 200 / static_cast<double>(image.getWidth() * image.getHeight())); 
+	}
+	else
+	{ 
+		scale = sqrt(image.getWidth() * image.getHeight() / static_cast<double>(image.getWidth() * image.getHeight())); 
+	}
+	// Maak nieuwe afbeelding aan met de betreffende schaal die hierboven berekent is.
+	IntensityImage* product = new IntensityImageStudent(image.getWidth()*scale, image.getHeight()*scale);
+	// Set elke pixel in de afbeelding volgens first order principe.
+	for (auto Xcord = 0; Xcord < product->getWidth(); ++Xcord)
+	{
+		for (auto Ycord = 0; Ycord < product->getHeight(); ++Ycord)
 		{
-			for (auto Ycord = 0; Ycord < product->getHeight(); ++Ycord)
-		{
-				Intensity pixel1 = image.getPixel(std::floor(Xcord * (1 / scale)), std::floor(Ycord * (1 / scale)));
-				Intensity pixel2 = image.getPixel(std::floor(Xcord * (1 / scale)), std::ceil(Ycord * (1 / scale)));
-				Intensity pixel3 = image.getPixel(std::ceil(Xcord * (1 / scale)), std::floor(Ycord * (1 / scale)));
-				Intensity pixel4 = image.getPixel(std::ceil(Xcord * (1 / scale)), std::ceil(Ycord * (1 / scale)));
-
-
-
+			Intensity pixel1 = image.getPixel(std::floor(Xcord * (1 / scale)), std::floor(Ycord * (1 / scale)));
+			Intensity pixel2 = image.getPixel(std::floor(Xcord * (1 / scale)), std::ceil(Ycord * (1 / scale)));
+			Intensity pixel3 = image.getPixel(std::ceil(Xcord * (1 / scale)), std::floor(Ycord * (1 / scale)));
+			Intensity pixel4 = image.getPixel(std::ceil(Xcord * (1 / scale)), std::ceil(Ycord * (1 / scale)));
 			Intensity pixel = (pixel1 + pixel2 + pixel3 + pixel4) / 4;
 			product->setPixel(Xcord, Ycord, pixel);
 		}
 	}
-		std::ofstream myfile;
-		myfile.open("tijdFirstOrderScale.txt", std::ofstream::ate);
-		myfile << "First Order Scale convert tijd in s: " << basetimer.elapsedSeconds() << " tijd ms:" << basetimer.elapsedMilliSeconds() << " tijd us" << basetimer.elapsedMicroSeconds();
-		myfile.close();
+	// Stop de timer.
+	basetimer.stop();
+	// Schrijf de uitkomst tijd van de timer in de betreffende tekstfile.
+	std::ofstream myfile;
+	myfile.open("tijdFirstOrderScale.txt", std::ofstream::ate);
+	myfile << "First Order Scale convert tijd in s: " << basetimer.elapsedSeconds() << " tijd ms:" << basetimer.elapsedMilliSeconds() << " tijd us" << basetimer.elapsedMicroSeconds();
+	myfile.close();
+	// Return de output afbeelding.
 	return product;
-
 }
 
 
